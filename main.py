@@ -4,6 +4,7 @@ import logging
 import random
 import urllib
 import urllib2
+import sys
 
 # for sending images
 from PIL import Image
@@ -18,6 +19,8 @@ TOKEN = '148181990:AAFmx8Rw0i-c1XZpFOcbXGZ5YRPzoUJe-Tg'
 
 BASE_URL = 'https://api.telegram.org/bot' + TOKEN + '/'
 
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 # ================================
 
@@ -142,7 +145,10 @@ class WebhookHandler(webapp2.RequestHandler):
                 reply('que comando, burro?')
 
         # CUSTOMIZE FROM HERE
-
+        # id: 37085276
+        # my id: 35321051
+        #elif '35321051' in str(fr):
+        #    reply('jota')
         elif 'who are you' in text:
             reply('autoreply bot, created by Jota, my master, supremo senhor do universo, pica das galáxias')
         elif 'what time' in text:
