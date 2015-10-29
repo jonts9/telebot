@@ -14,7 +14,7 @@ from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 import webapp2
 
-TOKEN = 'YOUR_BOT_TOKEN_HERE'
+TOKEN = '148181990:AAFmx8Rw0i-c1XZpFOcbXGZ5YRPzoUJe-Tg'
 
 BASE_URL = 'https://api.telegram.org/bot' + TOKEN + '/'
 
@@ -109,8 +109,14 @@ class WebhookHandler(webapp2.RequestHandler):
             if text == '/start':
                 reply('Bot enabled')
                 setEnabled(chat_id, True)
+            if text == '/start@autoreply_bot':
+                reply('Bot enabled')
+                setEnabled(chat_id, True)
             elif text == '/stop':
                 reply('Bot disabled')
+                setEnabled(chat_id, False)
+            elif text == '/stop@autoreply_bot':
+                reply('tchau, burro')
                 setEnabled(chat_id, False)
             elif text == '/image':
                 img = Image.new('RGB', (512, 512))
@@ -120,27 +126,39 @@ class WebhookHandler(webapp2.RequestHandler):
                 output = StringIO.StringIO()
                 img.save(output, 'JPEG')
                 reply(img=output.getvalue())
+            elif text == '/image@autoreply_bot':
+                img = Image.new('RGB', (512, 512))
+                base = random.randint(0, 16777216)
+                pixels = [base+i*j for i in range(512) for j in range(512)]  # generate sample image
+                img.putdata(pixels)
+                output = StringIO.StringIO()
+                img.save(output, 'JPEG')
+                reply(img=output.getvalue())
+            elif text == '/getinfo':
+                reply('update_id: ' + str(update_id) + '\n' + 'message: ' + str(message) + '\n' + 'message_id: ' + str(message_id) + '\n' + 'date: ' + str(date) + '\n' + 'text: ' + str(text) + '\n' + 'fr: ' + str(fr) + '\n' + 'chat: ' + str(chat) + '\n' + 'chat_id: ' + str(chat_id))
+            elif text == '/getinfo@autoreply_bot':
+                reply('update_id: ' + str(update_id) + '\n' + 'message: ' + str(message) + '\n' + 'message_id: ' + str(message_id) + '\n' + 'date: ' + str(date) + '\n' + 'text: ' + str(text) + '\n' + 'fr: ' + str(fr) + '\n' + 'chat: ' + str(chat) + '\n' + 'chat_id: ' + str(chat_id))
             else:
-                reply('What command?')
+                reply('que comando, burro?')
 
         # CUSTOMIZE FROM HERE
 
         elif 'who are you' in text:
-            reply('telebot starter kit, created by yukuku: https://github.com/yukuku/telebot')
+            reply('autoreply bot, created by Jota, my master, supremo senhor do universo, pica das galáxias')
         elif 'what time' in text:
             reply('look at the top-right corner of your screen!')
         else:
             if getEnabled(chat_id):
                 try:
                     resp1 = json.load(urllib2.urlopen('http://www.simsimi.com/requestChat?lc=en&ft=1.0&req=' + urllib.quote_plus(text.encode('utf-8'))))
-                    back = resp1.get('res')
+                    back = resp1['res']['msg']
                 except urllib2.HTTPError, err:
                     logging.error(err)
                     back = str(err)
                 if not back:
                     reply('okay...')
                 elif 'I HAVE NO RESPONSE' in back:
-                    reply('you said something with no meaning')
+                    reply('you said something with no meaning again. are you crazy waterfall?')
                 else:
                     reply(back)
             else:
